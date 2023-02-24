@@ -6,10 +6,10 @@ import db from './db/database.js';
 import oauthController from './controllers/oauth.controller.js';
 import configController from './controllers/config.controller.js';
 import connectionController from './controllers/connection.controller.js';
+import authController from './controllers/auth.controller.js';
 import auth from './controllers/access.middleware.js';
 import path from 'path';
-import { dirname, isCloud, getAccount, isAuthenticated } from './utils/utils.js';
-import accountController from './controllers/account.controller.js';
+import { dirname, getAccount, isAuthenticated } from './utils/utils.js';
 import errorManager from './utils/error.manager.js';
 import { WebSocketServer, WebSocket } from 'ws';
 import http from 'http';
@@ -43,10 +43,11 @@ class AuthServer {
         app.route('/connection').get(auth.secret.bind(auth), connectionController.listConnections.bind(connectionController));
         app.route('/connection/:connectionId').delete(auth.secret.bind(auth), connectionController.deleteConnection.bind(connectionController));
 
-        // Admin routes.
-        if (isCloud()) {
-            app.route('/account').post(auth.admin.bind(auth), accountController.createAccount.bind(accountController));
-        }
+        app.route('/login/password').post();
+
+        app.route('/login').post(authController.login.bind(authController));
+        app.route('/logout').post(authController.logout.bind(authController));
+        app.route('/signup').post(authController.signup.bind(authController));
 
         // Error handling.
         app.use((e: any, _: any, res: any, __: any) => {

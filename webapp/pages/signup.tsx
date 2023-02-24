@@ -1,4 +1,4 @@
-export default function Home() {
+export default function Signup() {
     return (
         <>
             <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -70,8 +70,8 @@ export default function Home() {
                     </div>
                     <div className="grid">
                         <div className="mt-4 flex place-self-center text-sm">
-                            <p className="text-text-light-gray">Need an account?</p>
-                            <a href="#" className="text-text-blue hover:text-text-light-blue ml-2">
+                            <p className="text-text-light-gray">Already have an account?</p>
+                            <a href="/" className="text-text-blue hover:text-text-light-blue ml-1">
                                 Sign in
                             </a>
                         </div>
