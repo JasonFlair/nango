@@ -1,17 +1,29 @@
 import { jest } from '@jest/globals';
 import SyncRun from './run.service.js';
 import { SyncType } from '../../models/Sync.js';
+import type { NangoConfig } from '../../integrations/index.js';
 
 jest.mock('../activity.service.js');
 jest.mock('./job.service.js');
 jest.mock('./data-records.service.js');
-jest.unstable_mockModule('./config.service.js', () => {
-    return {
-        getSyncConfig: Promise.resolve({
+jest.unstable_mockModule('./config.service.js', () => ({
+    getSyncConfig: jest.fn().mockImplementation(() => {
+        return Promise.resolve({
             integrations: { provider: {} }
-        })
-    };
-});
+        } as unknown as NangoConfig);
+    }),
+    getProviderConfig: jest.fn(() => {
+        return Promise.resolve({
+            integrations: { provider: {} }
+        } as unknown as NangoConfig);
+    })
+}));
+
+//
+// @ts-ignore
+const { getSyncConfig } = await import('./config.service.js');
+
+//import { getSyncConfig } from './config.service.js';
 
 describe('SyncRun', () => {
     let syncRun: SyncRun;
@@ -45,7 +57,7 @@ describe('SyncRun', () => {
     describe('run', () => {
         it('should return false if integration not matched', async () => {
             // Now you can control the mock function
-            //(getSyncConfig as jest.Mock).mockImplementationOnce(() =>
+            //await (getSyncConfig as jest.Mock).mockImplementation(() =>
             //Promise.resolve({
             //integrations: { 'different-provider': {} }
             //})
@@ -55,6 +67,17 @@ describe('SyncRun', () => {
             //integrations: { 'different-provider': {} }
             //} as unknown as NangoConfig);
             //});
+
+            //console.log(getSyncConfig);
+            //// @ts-ignore
+            //getSyncConfig.mockResolvedValue({
+            //// @ts-ignore
+            //integrations: { 'different-provider': {} }
+            //});
+            console.log(getSyncConfig);
+            // @ts-ignore
+            console.log(getSyncConfig());
+            //jest.spyOn(getSyncConfig, 'mockResolvedValue').mockResolvedValue(getSyncConfig().getMockImplementation()());
 
             const result = await syncRun.run();
 
