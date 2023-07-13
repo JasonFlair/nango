@@ -41,7 +41,7 @@ export function isCloud() {
 }
 
 export function isStaging() {
-    return process.env['NODE_ENV'] === NodeEnv.Staging;
+    return (process.env['NODE_ENV'] as NodeEnv) === NodeEnv.Staging;
 }
 
 export function getPort() {
